@@ -2,6 +2,8 @@ package main
 
 import "fmt"
 
+var version = "dev"
+
 func main() {
-    fmt.Println("skill-craft v0.1.0")
+	fmt.Println("skill-craft v" + version)
 }
