@@ -3,6 +3,8 @@ package tui
 import (
 	"os"
 	"path/filepath"
+
+	"github.com/Angel-Sechar/skill-craft/assets"
 )
 
 // Agent target directories
@@ -13,26 +15,27 @@ var agentDirs = map[string]string{
 }
 
 // installSkills writes selected skills into all detected agent directories
-func installSkills(skills []Skill) map[string]bool {
+func installSkills(sel Selection) map[string]bool {
 	results := make(map[string]bool)
+
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return results
 	}
 
+	skillIDs := resolveSkillIDs(sel)
+
 	for key, relPath := range agentDirs {
 		dir := filepath.Join(home, relPath)
 
-		// Skip agents that aren't installed
 		if !dirExists(dir) {
 			results[key] = false
 			continue
 		}
 
-		// Write each selected skill
 		success := true
-		for _, skill := range skills {
-			if err := writeSkill(dir, skill); err != nil {
+		for _, id := range skillIDs {
+			if err := writeSkill(dir, id); err != nil {
 				success = false
 			}
 		}
@@ -42,29 +45,61 @@ func installSkills(skills []Skill) map[string]bool {
 	return results
 }
 
-// writeSkill writes a single SKILL.md file into the agent's skills directory
-func writeSkill(agentDir string, skill Skill) error {
-	skillDir := filepath.Join(agentDir, skill.ID)
+// resolveSkillIDs builds the full list of skill IDs to install from the selection
+func resolveSkillIDs(sel Selection) []string {
+	ids := []string{}
 
+	// Stack skill
+	if sel.Stack != "" {
+		ids = append(ids, sel.Stack)
+	}
+
+	// Architecture skills
+	ids = append(ids, sel.Architecture...)
+
+	// Driven design skill
+	if sel.DrivenDesign != "" {
+		ids = append(ids, sel.DrivenDesign)
+	}
+
+	// Practices skills
+	ids = append(ids, sel.Practices...)
+
+	return ids
+}
+
+// writeSkill writes a single SKILL.md file into the agent's skills directory
+func writeSkill(agentDir string, skillID string) error {
+	content := readEmbeddedSkill(skillID)
+	if content == "" {
+		return nil
+	}
+
+	skillDir := filepath.Join(agentDir, skillID)
 	if err := os.MkdirAll(skillDir, 0755); err != nil {
 		return err
 	}
 
 	dest := filepath.Join(skillDir, "SKILL.md")
-
-	// Don't overwrite existing skills
 	if fileExists(dest) {
-		return nil
+		return nil // never overwrite existing skills
 	}
 
-	content := skillContent(skill)
 	return os.WriteFile(dest, []byte(content), 0644)
 }
 
-// skillContent returns the SKILL.md content for a given skill
-// In the real version this will use go:embed to read from assets/skills/
-func skillContent(skill Skill) string {
-	return "---\nname: " + skill.ID + "\ndescription: " + skill.Label + "\n---\n\n# " + skill.Label + "\n\nSkill content coming soon.\n"
+// readEmbeddedSkill reads a SKILL.md from the embedded filesystem
+func readEmbeddedSkill(id string) string {
+	// try each category
+	categories := []string{"framework", "architecture", "driven-design", "practices", "database"}
+	for _, cat := range categories {
+		path := "skills/" + cat + "/" + id + "/SKILL.md"
+		content, err := assets.SkillsFS.ReadFile(path)
+		if err == nil {
+			return string(content)
+		}
+	}
+	return ""
 }
 
 // dirExists checks if a directory exists
