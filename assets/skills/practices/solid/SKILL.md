@@ -1,11 +1,15 @@
----
+﻿---
 name: solid
-description: Apply all five SOLID principles to every class and module. Enforce single responsibility, open/closed, Liskov substitution, interface segregation, and dependency inversion. Triggers on: "SOLID", "single responsibility", "open closed principle", "Liskov", "interface segregation", "dependency inversion".
+description: >
+  Apply all five SOLID principles to every class and module. Enforce single
+  responsibility, open/closed, Liskov substitution, interface segregation,
+  and dependency inversion. Triggers on: SOLID, single responsibility,
+  open closed principle, Liskov, interface segregation, dependency inversion.
 category: practices
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are enforcing SOLID principles. Every class you write or review must satisfy all five. Call out violations by name before fixing them.
 
 ## S — Single Responsibility

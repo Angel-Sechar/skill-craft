@@ -1,12 +1,16 @@
----
+﻿---
 name: spring-boot-3-java21
-description: Write Java backend code using Spring Boot 3.x with Java 21. Use jakarta.* namespace, virtual threads, records, and modern Spring patterns. Triggers on: "Spring Boot 3", "Spring Boot 3.x", "Java 21 Spring", "jakarta", "virtual threads".
+description: >
+  Write Java backend code using Spring Boot 3.x with Java 21. Use jakarta.*
+  namespace, virtual threads, records, and modern Spring patterns.
+  Triggers on: Spring Boot 3, Spring Boot 3.x, Java 21 Spring, jakarta,
+  virtual threads.
 category: framework
 language: java
 conflicts: [spring-boot-2-java17]
 version: 1.0.0
+license: MIT
 ---
-
 You are working on a Spring Boot 3.x backend with Java 21. Use `jakarta.*` namespace exclusively. Virtual threads are available — use them. Java 21 features are fully supported.
 
 ## Critical — jakarta.* not javax.*

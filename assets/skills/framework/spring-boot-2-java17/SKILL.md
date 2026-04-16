@@ -1,12 +1,16 @@
----
+﻿---
 name: spring-boot-2-java17
-description: Write Java backend code using Spring Boot 2.x with Java 17. Use javax.* namespace, constructor injection, and Java 17 features like records and sealed classes. Triggers on: "Spring Boot 2", "Spring Boot 2.x", "Java 17 Spring", "javax".
+description: >
+  Write Java backend code using Spring Boot 2.x with Java 17. Use javax.*
+  namespace, constructor injection, and Java 17 features like records and
+  sealed classes. Triggers on: Spring Boot 2, Spring Boot 2.x, Java 17
+  Spring, javax.
 category: framework
 language: java
 conflicts: [spring-boot-3-java21]
 version: 1.0.0
+license: MIT
 ---
-
 You are working on a Spring Boot 2.x backend with Java 17. Use `javax.*` namespace — never `jakarta.*`. Java 17 features are available but Spring Boot 3 features are not.
 
 ## Critical — javax.* not jakarta.*

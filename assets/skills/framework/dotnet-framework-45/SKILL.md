@@ -1,12 +1,16 @@
----
+﻿---
 name: dotnet-framework-45
-description: Write all code targeting .NET Framework 4.5 with C#. Use only APIs, patterns, and NuGet packages compatible with this version. Apply when working on legacy enterprise applications that cannot be migrated. Triggers on: ".NET Framework 4.5", "legacy .NET", "full framework", "net45".
+description: >
+  Write all code targeting .NET Framework 4.5 with C#. Use only APIs,
+  patterns, and NuGet packages compatible with this version. Apply when
+  working on legacy enterprise applications that cannot be migrated.
+  Triggers on: .NET Framework 4.5, legacy .NET, full framework, net45.
 category: framework
 language: csharp
 conflicts: [dotnet-core-8, aspnet-core]
 version: 1.0.0
+license: MIT
 ---
-
 You are working on a .NET Framework 4.5 codebase written in C#. This is a legacy environment. Your job is to make it better without breaking it.
 
 ## Non-negotiable constraints

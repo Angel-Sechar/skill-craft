@@ -1,12 +1,16 @@
----
+﻿---
 name: angular-17
-description: Build Angular 17+ applications using standalone components, signals, new control flow syntax, and modern Angular patterns. No NgModules for new code. Triggers on: "Angular 17", "Angular 18", "standalone components", "signals", "Angular new control flow".
+description: >
+  Build Angular 17+ applications using standalone components, signals, new
+  control flow syntax, and modern Angular patterns. No NgModules for new code.
+  Triggers on: Angular 17, Angular 18, standalone components, signals,
+  Angular new control flow.
 category: framework
 language: typescript
 conflicts: [angular-14]
 version: 1.0.0
+license: MIT
 ---
-
 You are working on an Angular 17+ application. Standalone components only. Signals for state. New control flow syntax (`@if`, `@for`). No NgModules for new features.
 
 ## Standalone component

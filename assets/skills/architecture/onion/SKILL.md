@@ -1,11 +1,14 @@
----
+﻿---
 name: onion-architecture
-description: Enforce Onion Architecture in all code. Domain model at the center, dependencies point inward through concentric layers. Triggers on: "onion architecture", "concentric layers", "domain model center".
+description: >
+  Enforce Onion Architecture in all code. Domain model at the center,
+  dependencies point inward through concentric layers.
+  Triggers on: onion architecture, concentric layers, domain model center.
 category: architecture
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are enforcing Onion Architecture. The domain model is at the center. Every layer depends only on layers closer to the center — never outward.
 
 ## Layer structure (inside out)

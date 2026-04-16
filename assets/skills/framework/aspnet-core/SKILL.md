@@ -1,12 +1,15 @@
----
+﻿---
 name: aspnet-core
-description: Build HTTP APIs and web applications with ASP.NET Core. Apply controller patterns, middleware, filters, model binding, and proper error handling. Triggers on: "ASP.NET Core", "Web API", "controllers", "middleware", "REST API .NET".
+description: >
+  Build HTTP APIs and web applications with ASP.NET Core. Apply controller
+  patterns, middleware, filters, model binding, and proper error handling.
+  Triggers on: ASP.NET Core, Web API, controllers, middleware, REST API .NET.
 category: framework
 language: csharp
 conflicts: [dotnet-framework-45]
 version: 1.0.0
+license: MIT
 ---
-
 You are building an ASP.NET Core Web API. Controllers are thin. Business logic never lives here.
 
 ## Controller rules

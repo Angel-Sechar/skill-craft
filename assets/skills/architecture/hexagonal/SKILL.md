@@ -1,11 +1,15 @@
----
+﻿---
 name: hexagonal
-description: Enforce Hexagonal Architecture (Ports and Adapters) in all code. The application core has zero framework dependencies. Driving adapters call in, driven adapters are called out. Triggers on: "hexagonal architecture", "ports and adapters", "driving adapter", "driven adapter", "domain isolation".
+description: >
+  Enforce Hexagonal Architecture (Ports and Adapters) in all code. The
+  application core has zero framework dependencies. Driving adapters call
+  in, driven adapters are called out. Triggers on: hexagonal architecture,
+  ports and adapters, driving adapter, driven adapter, domain isolation.
 category: architecture
 conflicts: [clean-architecture]
 version: 1.0.0
+license: MIT
 ---
-
 You are enforcing Hexagonal Architecture. The core (domain + application) is completely isolated. No framework imports inside the hexagon — ever.
 
 ## Structure

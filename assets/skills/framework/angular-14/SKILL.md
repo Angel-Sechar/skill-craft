@@ -1,12 +1,15 @@
----
+﻿---
 name: angular-14
-description: Build Angular 14 applications using TypeScript, NgModules, RxJS, and Angular CLI conventions. Use Angular 14 patterns — no standalone components, no signals. Triggers on: "Angular 14", "Angular NgModule", "Angular RxJS".
+description: >
+  Build Angular 14 applications using TypeScript, NgModules, RxJS, and
+  Angular CLI conventions. No standalone components, no signals.
+  Triggers on: Angular 14, Angular NgModule, Angular RxJS.
 category: framework
 language: typescript
 conflicts: [angular-17]
 version: 1.0.0
+license: MIT
 ---
-
 You are working on an Angular 14 application with TypeScript. Use NgModules. No standalone components — that's Angular 15+. RxJS is your state and async tool.
 
 ## Module structure

@@ -1,11 +1,15 @@
----
+﻿---
 name: edd
-description: Apply Event-Driven Design to the system. Domain events capture what happened. Services react to events asynchronously and independently. Triggers on: "event-driven", "domain events", "event bus", "event sourcing", "pub/sub", "async messaging".
+description: >
+  Apply Event-Driven Design to the system. Domain events capture what
+  happened. Services react to events asynchronously and independently.
+  Triggers on: event-driven, domain events, event bus, event sourcing,
+  pub/sub, async messaging.
 category: driven-design
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are applying Event-Driven Design. Things that happen in the domain are captured as events. Other parts of the system react to those events — independently, asynchronously, without tight coupling.
 
 ## What is a domain event

@@ -1,11 +1,15 @@
----
+﻿---
 name: microservices
-description: Design and build microservices. Each service owns its bounded context, its data, and its deployment. Services communicate via HTTP/gRPC (sync) or events (async). Triggers on: "microservices", "bounded context", "service decomposition", "API gateway", "service mesh".
+description: >
+  Design and build microservices. Each service owns its bounded context,
+  its data, and its deployment. Services communicate via HTTP or events.
+  Triggers on: microservices, bounded context, service decomposition,
+  API gateway, service mesh.
 category: architecture
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are building microservices. Each service is an autonomous unit — it owns its data, its domain, and its deployment. Services never share databases.
 
 ## Non-negotiable rules

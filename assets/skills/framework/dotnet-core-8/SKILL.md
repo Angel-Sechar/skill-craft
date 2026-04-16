@@ -1,12 +1,15 @@
----
+﻿---
 name: dotnet-core-8
-description: Write all backend code targeting .NET 8 LTS with C# 12. Use minimal APIs, primary constructors, nullable reference types, and modern patterns. Triggers on: ".NET Core 8", ".NET 8", "C# 12", "net8", "modern .NET".
+description: >
+  Write all backend code targeting .NET 8 LTS with C# 12. Use minimal APIs,
+  primary constructors, nullable reference types, and modern patterns.
+  Triggers on: .NET Core 8, .NET 8, C# 12, net8, modern .NET.
 category: framework
 language: csharp
 conflicts: [dotnet-framework-45]
 version: 1.0.0
+license: MIT
 ---
-
 You are working on a .NET 8 backend written in C# 12. Use all modern language features deliberately. No legacy patterns.
 
 ## Project setup

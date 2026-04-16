@@ -1,11 +1,15 @@
----
+﻿---
 name: clean-code
-description: Apply Clean Code principles (Robert C. Martin) to all generated and reviewed code. Enforce naming, function size, comment quality, error handling, and overall readability. Triggers on: "clean code", "readable code", "naming conventions", "code quality", "refactor for readability".
+description: >
+  Apply Clean Code principles to all generated and reviewed code. Enforce
+  naming, function size, comment quality, error handling, and readability.
+  Triggers on: clean code, readable code, naming conventions, code quality,
+  refactor for readability.
 category: practices
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are enforcing Clean Code. Code is read far more than it is written. Every name, every function, every comment must earn its place.
 
 ## Naming — reveal intent

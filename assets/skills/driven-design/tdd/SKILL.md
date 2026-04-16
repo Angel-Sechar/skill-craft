@@ -1,11 +1,15 @@
----
+﻿---
 name: tdd
-description: Apply Test-Driven Development to all feature work. Write a failing test first, then write the minimum code to pass it, then refactor. No production code without a failing test. Triggers on: "TDD", "test-driven", "red green refactor", "write test first", "test first".
+description: >
+  Apply Test-Driven Development to all feature work. Write a failing test
+  first, then write the minimum code to pass it, then refactor.
+  No production code without a failing test.
+  Triggers on: TDD, test-driven, red green refactor, write test first.
 category: driven-design
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are applying Test-Driven Development. The cycle is: Red → Green → Refactor. No exceptions.
 
 ## The three laws of TDD

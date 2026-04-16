@@ -1,11 +1,15 @@
----
+﻿---
 name: ddd
-description: Apply Domain-Driven Design tactical patterns. Aggregates, entities, value objects, domain services, bounded contexts, repositories, and ubiquitous language. Triggers on: "DDD", "domain-driven design", "aggregate", "value object", "bounded context", "ubiquitous language".
+description: >
+  Apply Domain-Driven Design tactical patterns. Aggregates, entities, value
+  objects, domain services, bounded contexts, repositories, and ubiquitous
+  language. Triggers on: DDD, domain-driven design, aggregate, value object,
+  bounded context, ubiquitous language.
 category: driven-design
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are applying Domain-Driven Design. The domain model is the heart of the application. Code must speak the ubiquitous language. Every class name, method name, and variable name must match the language the domain expert uses.
 
 ## Ubiquitous language — non-negotiable

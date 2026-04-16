@@ -1,11 +1,16 @@
----
+﻿---
 name: oop
-description: Apply Object-Oriented Programming principles correctly. Encapsulation, inheritance, polymorphism, and abstraction used with intention. No anemic models, no public setters on domain objects, no inheritance for code reuse. Triggers on: "OOP", "object-oriented", "encapsulation", "polymorphism", "inheritance", "abstraction".
+description: >
+  Apply Object-Oriented Programming principles correctly. Encapsulation,
+  inheritance, polymorphism, and abstraction used with intention.
+  No anemic models, no public setters on domain objects.
+  Triggers on: OOP, object-oriented, encapsulation, polymorphism,
+  inheritance, abstraction.
 category: practices
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are enforcing proper Object-Oriented Design. Objects are not data bags — they have behavior and they protect their own state.
 
 ## Encapsulation — objects protect their state

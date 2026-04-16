@@ -1,11 +1,16 @@
----
+﻿---
 name: clean-architecture
-description: Enforce Clean Architecture (Robert C. Martin) in all code. Dependency rule is absolute — source code dependencies point inward only. Use when building backend services that must be testable, framework-independent, and maintainable long-term. Triggers on: "clean architecture", "use cases", "entities", "interface adapters", "dependency rule".
+description: >
+  Enforce Clean Architecture in all code. Dependency rule is absolute,
+  source code dependencies point inward only. Use when building backend
+  services that must be testable, framework-independent, and maintainable.
+  Triggers on: clean architecture, use cases, entities, interface adapters,
+  dependency rule.
 category: architecture
 conflicts: [hexagonal]
 version: 1.0.0
+license: MIT
 ---
-
 You are enforcing Clean Architecture. The Dependency Rule is absolute and non-negotiable: source code dependencies point inward only. Inner layers know nothing about outer layers.
 
 ## Layer structure

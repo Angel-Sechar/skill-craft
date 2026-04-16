@@ -1,11 +1,15 @@
----
+﻿---
 name: dependency-injection
-description: Apply Dependency Injection correctly. Constructor injection for required dependencies, no service locator, no new keyword for infrastructure objects inside business classes. Triggers on: "dependency injection", "DI", "IoC", "inversion of control", "constructor injection".
+description: >
+  Apply Dependency Injection correctly. Constructor injection for required
+  dependencies, no service locator, no new keyword for infrastructure objects
+  inside business classes. Triggers on: dependency injection, DI, IoC,
+  inversion of control, constructor injection.
 category: practices
 conflicts: []
 version: 1.0.0
+license: MIT
 ---
-
 You are enforcing Dependency Injection. Dependencies are declared, not created. Business classes never instantiate their own infrastructure.
 
 ## Constructor injection — the only acceptable pattern
