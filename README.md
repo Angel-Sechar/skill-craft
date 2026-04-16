@@ -35,14 +35,7 @@ No more repeated instructions. No more incongruent output.
 brew install Angel-Sechar/tap/skill-craft
 ```
 
-**Windows**
-
-```bash
-scoop bucket add angel https://github.com/Angel-Sechar/scoop-bucket
-scoop install skill-craft
-```
-
-**Go**
+**Windows (Go)**
 
 ```bash
 go install github.com/Angel-Sechar/skill-craft/cmd/skill-craft@latest
@@ -109,7 +102,7 @@ Skills are installed into every agent detected on your machine:
 
 > Hexagonal and Clean Architecture are incompatible — the TUI enforces this automatically.
 
-### Driven
+### Driven dev, arch, design
 
 | Skill                           |
 | ------------------------------- |
@@ -117,7 +110,7 @@ Skills are installed into every agent detected on your machine:
 | Event-Driven Architecture (EDA) |
 | Domain-Driven Design (DDD)      |
 
-### Practices
+### Code quality
 
 | Skill                |
 | -------------------- |
