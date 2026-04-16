@@ -37,13 +37,9 @@ func (m Model) viewWelcome() string {
 		b.WriteString(SwordStyle.Render(line) + "\n")
 	}
 	b.WriteString("\n")
-	b.WriteString(DividerStyle.Render("  ────────────────────────") + "\n")
 	b.WriteString("  " + TitleStyle.Render("skill-craft") + "  " + VersionStyle.Render("v"+Version) + "\n")
-	b.WriteString(DividerStyle.Render("  ────────────────────────") + "\n")
 	b.WriteString("\n")
-	b.WriteString(TaglineStyle.Render("  forge your agent.") + "\n")
-	b.WriteString("\n")
-	b.WriteString(AuthorStyle.Render("  by Angel Sechar") + "\n")
+	b.WriteString(TaglineStyle.Render("  Craft your development skills.") + "\n")
 	b.WriteString("\n\n")
 	b.WriteString(HintStyle.Render("  enter: start   q: quit") + "\n")
 
