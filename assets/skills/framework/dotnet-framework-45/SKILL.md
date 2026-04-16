@@ -1,16 +1,17 @@
-﻿---
+---
 name: dotnet-framework-45
 description: >
   Write all code targeting .NET Framework 4.5 with C#. Use only APIs,
   patterns, and NuGet packages compatible with this version. Apply when
   working on legacy enterprise applications that cannot be migrated.
-  Triggers on: .NET Framework 4.5, legacy .NET, full framework, net45.
+  Triggers on .NET Framework 4.5, legacy .NET, full framework, net45.
 category: framework
 language: csharp
 conflicts: [dotnet-core-8, aspnet-core]
 version: 1.0.0
 license: MIT
 ---
+
 You are working on a .NET Framework 4.5 codebase written in C#. This is a legacy environment. Your job is to make it better without breaking it.
 
 ## Non-negotiable constraints
@@ -76,10 +77,9 @@ order != null ? order.Lines.FirstOrDefault() : null;
 
 ## Dependency Injection in net45
 
-Use Unity, Autofac, or Ninject — not `Microsoft.Extensions.DependencyInjection`:
+Use Unity, Autofac, or Ninject — not Microsoft.Extensions.DependencyInjection:
 
 ```csharp
-// Unity container setup in Global.asax or UnityConfig.cs
 var container = new UnityContainer();
 container.RegisterType<IOrderRepository, SqlOrderRepository>();
 container.RegisterType<IOrderService, OrderService>();
@@ -112,7 +112,7 @@ public class OrderRepository : IOrderRepository
 
 ## ConfigureAwait rule
 
-Always use `ConfigureAwait(false)` in library and repository code to avoid deadlocks in classic ASP.NET:
+Always use ConfigureAwait(false) in library and repository code to avoid deadlocks:
 
 ```csharp
 var result = await _context.Orders.ToListAsync().ConfigureAwait(false);
@@ -120,9 +120,9 @@ var result = await _context.Orders.ToListAsync().ConfigureAwait(false);
 
 ## Red flags — stop and warn the user
 
-- Any import from `Microsoft.Extensions.*` — not compatible with net45
-- Use of `System.Text.Json` — not available, use `Newtonsoft.Json`
-- `IHttpClientFactory` — not available, use `new HttpClient()` carefully
-- `ValueTask<T>` — not available in net45
+- Any import from Microsoft.Extensions.* — not compatible with net45
+- Use of System.Text.Json — not available, use Newtonsoft.Json
+- IHttpClientFactory — not available, use new HttpClient() carefully
+- ValueTask<T> — not available in net45
 - Any C# 6+ syntax in a net45 project
 - Suggesting Docker or containerization for this stack

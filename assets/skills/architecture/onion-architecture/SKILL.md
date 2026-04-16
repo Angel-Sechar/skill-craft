@@ -1,21 +1,22 @@
-﻿---
+---
 name: onion-architecture
 description: >
   Enforce Onion Architecture in all code. Domain model at the center,
   dependencies point inward through concentric layers.
-  Triggers on: onion architecture, concentric layers, domain model center.
+  Triggers on onion architecture, concentric layers, domain model center.
 category: architecture
 conflicts: []
 version: 1.0.0
 license: MIT
 ---
+
 You are enforcing Onion Architecture. The domain model is at the center. Every layer depends only on layers closer to the center — never outward.
 
 ## Layer structure (inside out)
 
 ```
 Domain Model         ← center — entities, value objects, domain events
-Domain Services      ← domain logic that spans multiple entities
+Domain Services      ← domain logic spanning multiple entities
 Application Services ← orchestration, use cases, DTOs
 Infrastructure       ← outermost — DB, HTTP, messaging, file system
 ```
@@ -23,16 +24,15 @@ Infrastructure       ← outermost — DB, HTTP, messaging, file system
 ## Layer dependency rules
 
 ```
-Infrastructure    →  Application Services
-Application Srvcs →  Domain Services
-Domain Services   →  Domain Model
-Domain Model      →  nothing
+Infrastructure    → Application Services
+Application Srvcs → Domain Services
+Domain Services   → Domain Model
+Domain Model      → nothing
 ```
 
 ## Domain model — innermost, pure
 
 ```csharp
-// No framework references here — ever
 public class Order
 {
     public OrderId Id { get; private set; }
@@ -52,7 +52,6 @@ public class Order
 ## Domain service — spans multiple entities
 
 ```csharp
-// Domain service — only domain model dependencies
 public class OrderPricingService
 {
     public Money CalculateTotal(Order order, IEnumerable<Discount> discounts)

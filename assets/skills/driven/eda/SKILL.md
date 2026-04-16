@@ -1,15 +1,16 @@
-﻿---
-name: edd
+---
+name: eda
 description: >
-  Apply Event-Driven Design to the system. Domain events capture what
-  happened. Services react to events asynchronously and independently.
-  Triggers on: event-driven, domain events, event bus, event sourcing,
-  pub/sub, async messaging.
+  Apply Event-Driven Architecture to the system. Domain events capture
+  what happened. Services react to events asynchronously and independently.
+  Triggers on event-driven architecture, domain events, event bus,
+  event sourcing, pub/sub, async messaging.
 category: driven-design
 conflicts: []
 version: 1.0.0
 license: MIT
 ---
+
 You are applying Event-Driven Design. Things that happen in the domain are captured as events. Other parts of the system react to those events — independently, asynchronously, without tight coupling.
 
 ## What is a domain event
@@ -30,8 +31,8 @@ public record OrderConfirmedEvent(
 }
 
 // WRONG — command disguised as event
-public record ConfirmOrderEvent(...) // ← commands are not events
-public record OrderEvent(...)        // ← too generic, meaningless
+public record ConfirmOrderEvent(...)  // commands are not events
+public record OrderEvent(...)         // too generic, meaningless
 ```
 
 ## Raising events inside the aggregate
@@ -49,7 +50,7 @@ public class Order
 
         Status = OrderStatus.Confirmed;
 
-        // Raise event AFTER state change — fact is recorded after it happens
+        // Raise event AFTER state change
         _events.Add(new OrderConfirmedEvent(Id, CustomerId, Total, DateTime.UtcNow));
     }
 
@@ -86,7 +87,6 @@ public class OrderConfirmedConsumer(
 {
     public async Task HandleAsync(OrderConfirmedEvent evt, CancellationToken ct)
     {
-        // Idempotency check — processing same event twice = same outcome
         if (await processedEvents.HasBeenProcessedAsync(evt.EventId, ct))
             return;
 
@@ -99,17 +99,15 @@ public class OrderConfirmedConsumer(
 ## Rules to enforce always
 
 - Events are facts — immutable, past tense, never modified after creation
-- Always include `EventId` for idempotency and `OccurredAt` for ordering
+- Always include EventId for idempotency and OccurredAt for ordering
 - Publish events AFTER successful persistence — never before
-- Consumers must be idempotent — same event twice = same result
-- Never call another aggregate's method inside an event handler — publish a new event instead
+- Consumers must be idempotent — same event twice equals same result
 - Dead letter queue for all consumers — failed events must not be silently dropped
 
 ## Red flags — stop and warn
 
-- Event published before data is saved — inconsistency risk
+- Event published before data is saved
 - Event consumer that is not idempotent
 - Event with mutable properties
-- Using events as commands — "ProcessOrderEvent" is a command, not an event
-- Synchronous chain of event handlers — defeats the purpose of async decoupling
+- Using events as commands — ProcessOrderEvent is a command, not an event
 - Missing correlation ID for tracing events across services

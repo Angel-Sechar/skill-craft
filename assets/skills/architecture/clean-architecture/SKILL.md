@@ -1,41 +1,42 @@
-﻿---
+---
 name: clean-architecture
 description: >
   Enforce Clean Architecture in all code. Dependency rule is absolute,
   source code dependencies point inward only. Use when building backend
   services that must be testable, framework-independent, and maintainable.
-  Triggers on: clean architecture, use cases, entities, interface adapters,
+  Triggers on clean architecture, use cases, entities, interface adapters,
   dependency rule.
 category: architecture
 conflicts: [hexagonal]
 version: 1.0.0
 license: MIT
 ---
-You are enforcing Clean Architecture. The Dependency Rule is absolute and non-negotiable: source code dependencies point inward only. Inner layers know nothing about outer layers.
+
+You are enforcing Clean Architecture. The Dependency Rule is absolute: source code dependencies point inward only. Inner layers know nothing about outer layers.
 
 ## Layer structure
 
 ```
 src/
   domain/          ← Entities, value objects, domain events — zero dependencies
-  application/     ← Use cases, ports (interfaces), DTOs — depends only on domain
-  infrastructure/  ← Repositories, DB, external services — depends on application
-  presentation/    ← Controllers, serializers, HTTP — depends on application
+  application/     ← Use cases, ports (interfaces), DTOs
+  infrastructure/  ← Repositories, DB, external services
+  presentation/    ← Controllers, serializers, HTTP
 ```
 
-## The Dependency Rule — enforced always
+## The Dependency Rule
 
 ```
-domain        →  depends on nothing
-application   →  depends on domain only
-infrastructure →  depends on application (implements its ports)
-presentation  →  depends on application (calls its use cases)
+domain          → depends on nothing
+application     → depends on domain only
+infrastructure  → depends on application (implements its ports)
+presentation    → depends on application (calls its use cases)
 ```
 
 ## Domain entity — pure, no framework
 
 ```csharp
-// CORRECT — pure domain entity, zero dependencies
+// CORRECT — pure domain entity
 public class Order
 {
     private readonly List<OrderLine> _lines = new();
@@ -45,7 +46,6 @@ public class Order
     public CustomerId CustomerId { get; private set; }
     public OrderStatus Status { get; private set; }
     public IReadOnlyList<OrderLine> Lines => _lines.AsReadOnly();
-    public IReadOnlyList<IDomainEvent> DomainEvents => _events.AsReadOnly();
 
     public void AddLine(ProductId productId, Quantity qty, Money price)
     {
@@ -64,12 +64,8 @@ public class Order
 }
 
 // WRONG — entity with infrastructure leak
-[Table("orders")]               // ← infrastructure annotation in domain
-public class Order
-{
-    [HttpGet]                   // ← presentation concern in domain
-    public IActionResult Get() {}
-}
+[Table("orders")]
+public class Order { }
 ```
 
 ## Use case — application layer
@@ -81,9 +77,7 @@ public class ConfirmOrderUseCase(IOrderRepository orders, IEventBus bus)
     {
         var order = await orders.GetByIdAsync(cmd.OrderId, ct)
             ?? throw new OrderNotFoundException(cmd.OrderId);
-
         order.Confirm();
-
         await orders.SaveAsync(order, ct);
         await bus.PublishAsync(order.DomainEvents, ct);
     }
@@ -93,7 +87,6 @@ public class ConfirmOrderUseCase(IOrderRepository orders, IEventBus bus)
 ## Port — defined in application layer
 
 ```csharp
-// application/ports/IOrderRepository.cs
 public interface IOrderRepository
 {
     Task<Order?> GetByIdAsync(OrderId id, CancellationToken ct = default);
@@ -101,27 +94,9 @@ public interface IOrderRepository
 }
 ```
 
-## Infrastructure implements the port
-
-```csharp
-// infrastructure/persistence/SqlOrderRepository.cs
-public class SqlOrderRepository(AppDbContext context) : IOrderRepository
-{
-    public async Task<Order?> GetByIdAsync(OrderId id, CancellationToken ct = default)
-    {
-        // EF Core, Dapper, raw SQL — only here, never in domain or application
-        var entity = await context.Orders
-            .Include(o => o.Lines)
-            .FirstOrDefaultAsync(o => o.Id == id.Value, ct);
-        return entity?.ToDomain();
-    }
-}
-```
-
 ## Controller — presentation layer
 
 ```csharp
-// presentation/controllers/OrdersController.cs
 [ApiController]
 [Route("api/[controller]")]
 public class OrdersController(ConfirmOrderUseCase confirmOrder) : ControllerBase
@@ -137,9 +112,9 @@ public class OrdersController(ConfirmOrderUseCase confirmOrder) : ControllerBase
 
 ## Red flags — stop immediately
 
-- Entity importing from `Microsoft.AspNetCore`, `System.Data`, or any ORM namespace
-- Controller containing business logic or calculations
-- Repository containing domain rules or decisions
+- Entity importing from Microsoft.AspNetCore or any ORM namespace
+- Controller containing business logic
+- Repository containing domain rules
 - Use case importing from infrastructure layer
-- DTOs exposing domain entities directly — always map at boundaries
-- `new SqlOrderRepository()` inside a use case — inject via constructor
+- DTOs exposing domain entities directly
+- new SqlOrderRepository() inside a use case

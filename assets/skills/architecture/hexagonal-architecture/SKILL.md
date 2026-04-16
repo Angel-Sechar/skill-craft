@@ -1,15 +1,16 @@
-﻿---
-name: hexagonal
+---
+name: hexagonal-architecture
 description: >
   Enforce Hexagonal Architecture (Ports and Adapters) in all code. The
   application core has zero framework dependencies. Driving adapters call
-  in, driven adapters are called out. Triggers on: hexagonal architecture,
+  in, driven adapters are called out. Triggers on hexagonal architecture,
   ports and adapters, driving adapter, driven adapter, domain isolation.
 category: architecture
 conflicts: [clean-architecture]
 version: 1.0.0
 license: MIT
 ---
+
 You are enforcing Hexagonal Architecture. The core (domain + application) is completely isolated. No framework imports inside the hexagon — ever.
 
 ## Structure
@@ -36,7 +37,6 @@ src/
 ## Driving port (input) — defined in core
 
 ```java
-// core/ports/driving/ConfirmOrderPort.java
 public interface ConfirmOrderPort {
     void confirm(ConfirmOrderCommand command);
 }
@@ -45,7 +45,6 @@ public interface ConfirmOrderPort {
 ## Driven port (output) — defined in core
 
 ```java
-// core/ports/driven/OrderRepositoryPort.java
 public interface OrderRepositoryPort {
     Optional<Order> findById(OrderId id);
     void save(Order order);
@@ -55,7 +54,6 @@ public interface OrderRepositoryPort {
 ## Application service — implements driving port, uses driven ports
 
 ```java
-// core/application/ConfirmOrderService.java
 public class ConfirmOrderService implements ConfirmOrderPort {
 
     private final OrderRepositoryPort orderRepository;
@@ -63,8 +61,7 @@ public class ConfirmOrderService implements ConfirmOrderPort {
 
     public ConfirmOrderService(
         OrderRepositoryPort orderRepository,
-        EventPublisherPort eventPublisher
-    ) {
+        EventPublisherPort eventPublisher) {
         this.orderRepository = orderRepository;
         this.eventPublisher = eventPublisher;
     }
@@ -73,24 +70,21 @@ public class ConfirmOrderService implements ConfirmOrderPort {
     public void confirm(ConfirmOrderCommand command) {
         var order = orderRepository.findById(new OrderId(command.orderId()))
             .orElseThrow(() -> new OrderNotFoundException(command.orderId()));
-
         order.confirm();
-
         orderRepository.save(order);
         eventPublisher.publish(new OrderConfirmedEvent(order.id()));
     }
 }
 ```
 
-## Driving adapter (HTTP) — calls into core via port
+## Driving adapter (HTTP)
 
 ```java
-// adapters/driving/http/OrderController.java
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final ConfirmOrderPort confirmOrder;  // depends on PORT, not implementation
+    private final ConfirmOrderPort confirmOrder;
 
     public OrderController(ConfirmOrderPort confirmOrder) {
         this.confirmOrder = confirmOrder;
@@ -104,18 +98,13 @@ public class OrderController {
 }
 ```
 
-## Driven adapter (persistence) — implements driven port
+## Driven adapter (persistence)
 
 ```java
-// adapters/driven/persistence/JpaOrderRepository.java
 @Repository
 public class JpaOrderRepository implements OrderRepositoryPort {
 
     private final OrderJpaRepository jpa;
-
-    public JpaOrderRepository(OrderJpaRepository jpa) {
-        this.jpa = jpa;
-    }
 
     @Override
     public Optional<Order> findById(OrderId id) {
@@ -129,32 +118,10 @@ public class JpaOrderRepository implements OrderRepositoryPort {
 }
 ```
 
-## The test that matters
-
-You can test the entire core without Spring, without a database, without HTTP:
-
-```java
-@Test
-void confirm_existingOrder_publishesEvent() {
-    var repo = new InMemoryOrderRepository();
-    var publisher = new InMemoryEventPublisher();
-    var service = new ConfirmOrderService(repo, publisher);
-
-    var order = Order.createDraft(new CustomerId(UUID.randomUUID()));
-    order.addLine(new ProductId(UUID.randomUUID()), new Quantity(1), Money.of(100));
-    repo.save(order);
-
-    service.confirm(new ConfirmOrderCommand(order.id().value()));
-
-    assertThat(publisher.publishedEvents()).hasSize(1);
-    assertThat(publisher.publishedEvents().get(0)).isInstanceOf(OrderConfirmedEvent.class);
-}
-```
-
 ## Red flags — stop immediately
 
-- Any Spring annotation (`@Service`, `@Component`, `@Repository`) inside `core/`
-- HTTP status codes or JSON annotations in application services
+- Any Spring annotation inside core/
+- HTTP status codes in application services
 - SQL or ORM calls in domain classes
-- Application service calling another adapter directly — only via ports
+- Application service calling another adapter directly
 - Domain entities serialized directly in HTTP responses

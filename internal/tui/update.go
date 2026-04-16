@@ -144,7 +144,7 @@ func (m Model) updateArchitecture(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "enter":
 		if len(m.Selection.Architecture) > 0 {
 			m.Screen = ScreenDrivenDesign
-			m.Options = DrivenDesignOptions
+			m.Options = DrivenOptions
 			m.Cursor = 0
 		}
 	}

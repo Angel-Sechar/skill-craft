@@ -86,8 +86,8 @@ var StackOptions = map[Framework][]Option{
 func ArchitectureOptions(fw Framework) []Option {
 	opts := []Option{
 		{ID: "clean-architecture", Label: "Clean Architecture"},
-		{ID: "hexagonal", Label: "Hexagonal Architecture"},
-		{ID: "onion", Label: "Onion Architecture"},
+		{ID: "hexagonal-architecture", Label: "Hexagonal Architecture"},
+		{ID: "onion-architecture", Label: "Onion Architecture"},
 	}
 	if fw == FrameworkSpringBoot {
 		opts = append(opts, Option{ID: "microservices", Label: "Microservices"})
@@ -101,11 +101,11 @@ var ArchitectureConflicts = map[string]string{
 	"clean-architecture": "hexagonal",
 }
 
-// ── Driven design options ─────────────────────────────────────────────────────
+// ── Driven  options ─────────────────────────────────────────────────────
 
-var DrivenDesignOptions = []Option{
-	{ID: "tdd", Label: "Test-Driven Design"},
-	{ID: "edd", Label: "Event-Driven Design"},
+var DrivenOptions = []Option{
+	{ID: "tdd", Label: "Test-Driven Development"},
+	{ID: "eda", Label: "Event-Driven Architecture"},
 	{ID: "ddd", Label: "Domain-Driven Design"},
 }
 

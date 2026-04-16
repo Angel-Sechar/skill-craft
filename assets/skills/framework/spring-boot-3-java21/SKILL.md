@@ -1,9 +1,9 @@
-﻿---
+---
 name: spring-boot-3-java21
 description: >
   Write Java backend code using Spring Boot 3.x with Java 21. Use jakarta.*
   namespace, virtual threads, records, and modern Spring patterns.
-  Triggers on: Spring Boot 3, Spring Boot 3.x, Java 21 Spring, jakarta,
+  Triggers on Spring Boot 3, Spring Boot 3.x, Java 21 Spring, jakarta,
   virtual threads.
 category: framework
 language: java
@@ -11,7 +11,8 @@ conflicts: [spring-boot-2-java17]
 version: 1.0.0
 license: MIT
 ---
-You are working on a Spring Boot 3.x backend with Java 21. Use `jakarta.*` namespace exclusively. Virtual threads are available — use them. Java 21 features are fully supported.
+
+You are working on a Spring Boot 3.x backend with Java 21. Use jakarta.* namespace exclusively. Virtual threads are available — use them.
 
 ## Critical — jakarta.* not javax.*
 
@@ -43,7 +44,6 @@ import javax.validation.constraints.NotNull;
 ## Enable virtual threads (Java 21 + Boot 3.2)
 
 ```yaml
-# application.yml
 spring:
   threads:
     virtual:
@@ -59,12 +59,7 @@ public record CreateOrderRequest(
     @NotNull @Size(min = 1) List<OrderLineRequest> lines
 ) {}
 
-// Sequenced collections
-List<OrderLine> lines = new ArrayList<>();
-var first = lines.getFirst();
-var last  = lines.getLast();
-
-// Pattern matching in switch (finalized in Java 21)
+// Pattern matching in switch
 String describe(Object obj) {
     return switch (obj) {
         case Order o when o.status() == CONFIRMED -> "Confirmed: " + o.id();
@@ -74,12 +69,9 @@ String describe(Object obj) {
     };
 }
 
-// Virtual thread-aware — avoid blocking calls
-// WRONG — blocks a virtual thread unnecessarily
-Thread.sleep(1000);
-
-// CORRECT — use async or reactive where blocking is needed
-CompletableFuture.runAsync(() -> expensiveOperation());
+// Sequenced collections
+var first = lines.getFirst();
+var last  = lines.getLast();
 ```
 
 ## REST controller
@@ -102,14 +94,14 @@ public class OrderController {
 
 ## Problem Details — built into Boot 3
 
-```java
-// application.yml
+```yaml
 spring:
   mvc:
     problemdetails:
       enabled: true
+```
 
-// Exception handler
+```java
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -125,8 +117,8 @@ public class GlobalExceptionHandler {
 
 ## Red flags — stop and warn
 
-- Any `javax.*` import — wrong namespace for Boot 3
-- `@Autowired` on fields — use constructor injection
-- Calling `Thread.sleep()` or blocking I/O on virtual threads unnecessarily
-- `@Transactional` on domain services — only on application/repository layer
+- Any javax.* import — wrong namespace for Boot 3
+- @Autowired on fields — use constructor injection
+- Blocking I/O on virtual threads unnecessarily
+- @Transactional on domain services — only on application layer
 - Not enabling virtual threads when on Java 21 + Boot 3.2

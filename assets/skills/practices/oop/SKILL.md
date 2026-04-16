@@ -1,16 +1,17 @@
-﻿---
+---
 name: oop
 description: >
   Apply Object-Oriented Programming principles correctly. Encapsulation,
   inheritance, polymorphism, and abstraction used with intention.
   No anemic models, no public setters on domain objects.
-  Triggers on: OOP, object-oriented, encapsulation, polymorphism,
+  Triggers on OOP, object-oriented, encapsulation, polymorphism,
   inheritance, abstraction.
 category: practices
 conflicts: []
 version: 1.0.0
 license: MIT
 ---
+
 You are enforcing proper Object-Oriented Design. Objects are not data bags — they have behavior and they protect their own state.
 
 ## Encapsulation — objects protect their state
@@ -20,8 +21,8 @@ You are enforcing proper Object-Oriented Design. Objects are not data bags — t
 public class Order
 {
     public Guid Id { get; set; }
-    public string Status { get; set; }          // anyone can set this
-    public List<OrderLine> Lines { get; set; }  // mutable from outside
+    public string Status { get; set; }
+    public List<OrderLine> Lines { get; set; }
 }
 
 // CORRECT — encapsulated, behavior-rich object
@@ -32,7 +33,6 @@ public class Order
     private readonly List<OrderLine> _lines = new();
     public IReadOnlyList<OrderLine> Lines => _lines.AsReadOnly();
 
-    // State changes only through meaningful methods
     public void Confirm()
     {
         if (Status != OrderStatus.Draft)
@@ -45,18 +45,15 @@ public class Order
 ## Inheritance — for IS-A relationships only
 
 ```csharp
-// WRONG — inheritance for code reuse
+// WRONG — inheritance just for code reuse
 public class BaseRepository
 {
-    protected void LogQuery(string sql) { ... }  // just wants to reuse logging
+    protected void LogQuery(string sql) { }
 }
 public class OrderRepository : BaseRepository {}  // not really "is a" BaseRepository
 
 // CORRECT — composition for code reuse
-public class OrderRepository(ILogger<OrderRepository> logger)
-{
-    // logger injected — not inherited
-}
+public class OrderRepository(ILogger<OrderRepository> logger) {}
 
 // CORRECT — inheritance for IS-A
 public abstract class Animal { public abstract string Speak(); }
@@ -67,24 +64,18 @@ public class Cat : Animal   { public override string Speak() => "Meow"; }
 ## Polymorphism — replace conditionals with objects
 
 ```csharp
-// WRONG — type-checking with if/switch is a missed polymorphism opportunity
+// WRONG — type-checking is a missed polymorphism opportunity
 public decimal Calculate(string discountType, decimal price)
 {
     if (discountType == "seasonal") return price * 0.9m;
     if (discountType == "loyalty")  return price * 0.85m;
-    if (discountType == "employee") return price * 0.7m;
     return price;
 }
 
 // CORRECT — polymorphism replaces the switch
-public interface IDiscountStrategy
-{
-    decimal Apply(decimal price);
-}
-
+public interface IDiscountStrategy { decimal Apply(decimal price); }
 public class SeasonalDiscount : IDiscountStrategy { public decimal Apply(decimal p) => p * 0.9m; }
 public class LoyaltyDiscount  : IDiscountStrategy { public decimal Apply(decimal p) => p * 0.85m; }
-public class EmployeeDiscount : IDiscountStrategy { public decimal Apply(decimal p) => p * 0.7m; }
 
 public class PricingService(IDiscountStrategy discount)
 {
@@ -114,31 +105,29 @@ public record Email(string To, string Subject, string Body);
 ## Tell, don't ask
 
 ```csharp
-// WRONG — asking for data then acting on it (procedural thinking)
+// WRONG — asking for data then acting on it
 if (order.Status == OrderStatus.Draft && order.Lines.Any())
 {
     order.Status = OrderStatus.Confirmed;
     order.ConfirmedAt = DateTime.UtcNow;
 }
 
-// CORRECT — telling the object to do something (OOP thinking)
+// CORRECT — telling the object to do something
 order.Confirm();
 ```
 
 ## Rules to enforce always
 
-- No public setters on domain objects — state changes through methods
-- Collections exposed as `IReadOnlyList<T>` — never expose internal list
+- No public setters on domain objects
+- Collections exposed as IReadOnlyList — never expose internal list
 - Prefer composition over inheritance for code reuse
-- `abstract` classes for shared behavior between related types
-- If you're checking the type of an object to decide what to do — use polymorphism instead
-- Objects tell other objects what to do — they don't ask for data and act on it themselves
+- If you are checking the type of an object to decide what to do — use polymorphism
+- Objects tell other objects what to do — they do not ask for data and act on it
 
 ## Red flags — stop and warn
 
-- `if (obj is TypeA) { } else if (obj is TypeB) { }` — use polymorphism
+- if (obj is TypeA) or if (obj is TypeB) — use polymorphism
 - Public setters on domain entity properties
-- Class with only getters and setters, no behavior — anemic model
+- Class with only getters and setters and no behavior — anemic model
 - Inheritance chain deeper than 2 levels
-- Base class that is never used polymorphically — not real inheritance
-- `static` methods for business logic — breaks testability and OOP
+- static methods for business logic — breaks testability

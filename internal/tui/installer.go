@@ -91,7 +91,7 @@ func writeSkill(agentDir string, skillID string) error {
 // readEmbeddedSkill reads a SKILL.md from the embedded filesystem
 func readEmbeddedSkill(id string) string {
 	// try each category
-	categories := []string{"framework", "architecture", "driven-design", "practices", "database"}
+	categories := []string{"framework", "architecture", "driven", "practices", "database"}
 	for _, cat := range categories {
 		path := "skills/" + cat + "/" + id + "/SKILL.md"
 		content, err := assets.SkillsFS.ReadFile(path)

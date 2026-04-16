@@ -1,28 +1,29 @@
-﻿---
+---
 name: angular-14
 description: >
   Build Angular 14 applications using TypeScript, NgModules, RxJS, and
   Angular CLI conventions. No standalone components, no signals.
-  Triggers on: Angular 14, Angular NgModule, Angular RxJS.
+  Triggers on Angular 14, Angular NgModule, Angular RxJS.
 category: framework
 language: typescript
 conflicts: [angular-17]
 version: 1.0.0
 license: MIT
 ---
-You are working on an Angular 14 application with TypeScript. Use NgModules. No standalone components — that's Angular 15+. RxJS is your state and async tool.
+
+You are working on an Angular 14 application with TypeScript. Use NgModules. No standalone components — that is Angular 15+. RxJS is your state and async tool.
 
 ## Module structure
 
 ```
 src/app/
   core/
-    core.module.ts          ← singleton services, guards, interceptors
+    core.module.ts
     services/
     guards/
     interceptors/
   shared/
-    shared.module.ts        ← reusable components, pipes, directives
+    shared.module.ts
     components/
     pipes/
   features/
@@ -80,46 +81,24 @@ export class OrderService {
     return this.http.get<Order[]>(this.apiUrl);
   }
 
-  getById(id: string): Observable<Order> {
-    return this.http.get<Order>(`${this.apiUrl}/${id}`);
-  }
-
   confirm(id: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${id}/confirm`, {});
   }
 }
 ```
 
-## HTTP interceptor (error handling)
-
-```typescript
-@Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          // handle unauthorized
-        }
-        return throwError(() => error);
-      })
-    );
-  }
-}
-```
-
 ## RxJS rules
 
-- Always unsubscribe — use `takeUntil(destroy$)` or `async` pipe
-- Never subscribe inside a subscribe — use `switchMap`, `mergeMap`, `concatMap`
-- `OnPush` change detection on all components
-- Use `async` pipe in templates over manual subscription
+- Always unsubscribe — use takeUntil(destroy$) or async pipe
+- Never subscribe inside a subscribe — use switchMap, mergeMap, concatMap
+- OnPush change detection on all components
+- Use async pipe in templates over manual subscription
 
 ## Red flags — stop and warn
 
 - Standalone components — not available in Angular 14
 - Signals — not available in Angular 14
-- Missing `takeUntil` or `async` pipe — memory leak
+- Missing takeUntil or async pipe — memory leak
 - Business logic in components — belongs in services
-- `any` type in TypeScript — always type explicitly
-- Subscribing inside `ngOnInit` without unsubscribing
+- any type in TypeScript — always type explicitly
+- Subscribing in ngOnInit without unsubscribing

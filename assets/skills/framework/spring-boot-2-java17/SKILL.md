@@ -1,9 +1,9 @@
-﻿---
+---
 name: spring-boot-2-java17
 description: >
   Write Java backend code using Spring Boot 2.x with Java 17. Use javax.*
   namespace, constructor injection, and Java 17 features like records and
-  sealed classes. Triggers on: Spring Boot 2, Spring Boot 2.x, Java 17
+  sealed classes. Triggers on Spring Boot 2, Spring Boot 2.x, Java 17
   Spring, javax.
 category: framework
 language: java
@@ -11,7 +11,8 @@ conflicts: [spring-boot-3-java21]
 version: 1.0.0
 license: MIT
 ---
-You are working on a Spring Boot 2.x backend with Java 17. Use `javax.*` namespace — never `jakarta.*`. Java 17 features are available but Spring Boot 3 features are not.
+
+You are working on a Spring Boot 2.x backend with Java 17. Use javax.* namespace — never jakarta.*. Java 17 features are available but Spring Boot 3 features are not.
 
 ## Critical — javax.* not jakarta.*
 
@@ -20,7 +21,6 @@ You are working on a Spring Boot 2.x backend with Java 17. Use `javax.*` namespa
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.servlet.http.HttpServletRequest;
 
 // WRONG — this is Spring Boot 3
@@ -52,14 +52,12 @@ public record CreateOrderRequest(
 
 // Sealed classes for domain results
 public sealed interface OrderResult
-    permits OrderResult.Success, OrderResult.NotFound, OrderResult.Conflict {
-
+    permits OrderResult.Success, OrderResult.NotFound {
     record Success(OrderDto order) implements OrderResult {}
     record NotFound(UUID orderId) implements OrderResult {}
-    record Conflict(String reason) implements OrderResult {}
 }
 
-// Pattern matching for instanceof
+// Pattern matching
 if (result instanceof OrderResult.NotFound notFound) {
     return ResponseEntity.notFound().build();
 }
@@ -86,11 +84,8 @@ public class OrderController {
 
     @PostMapping("/{id}/confirm")
     public ResponseEntity<Void> confirm(@PathVariable UUID id) {
-        return switch (orderService.confirm(id)) {
-            case OrderResult.Success s    -> ResponseEntity.noContent().build();
-            case OrderResult.NotFound nf  -> ResponseEntity.notFound().build();
-            case OrderResult.Conflict c   -> ResponseEntity.status(409).build();
-        };
+        orderService.confirm(id);
+        return ResponseEntity.noContent().build();
     }
 }
 ```
@@ -106,38 +101,18 @@ public class OrderService {
     private final EventPublisher eventPublisher;
 }
 
-// WRONG — field injection
+// WRONG — field injection, never do this
 @Service
 public class OrderService {
     @Autowired
-    private OrderRepository orderRepository; // never do this
-}
-```
-
-## Exception handling
-
-```java
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(OrderNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFound(OrderNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage(), "ORDER_NOT_FOUND");
-    }
-
-    @ExceptionHandler(OrderAlreadyConfirmedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleConflict(OrderAlreadyConfirmedException ex) {
-        return new ErrorResponse(ex.getMessage(), "ORDER_CONFLICT");
-    }
+    private OrderRepository orderRepository;
 }
 ```
 
 ## Red flags — stop and warn
 
-- Any `jakarta.*` import — wrong namespace for Boot 2
-- `@Autowired` on fields — use constructor injection
-- Business logic in `@RestController` methods
-- `@Transactional` on domain services — only on application services
-- Missing `final` on injected fields
+- Any jakarta.* import — wrong namespace for Boot 2
+- @Autowired on fields — use constructor injection
+- Business logic in @RestController methods
+- @Transactional on domain services — only on application services
+- Missing final on injected fields

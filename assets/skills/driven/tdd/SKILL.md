@@ -1,16 +1,18 @@
-﻿---
+---
 name: tdd
 description: >
   Apply Test-Driven Development to all feature work. Write a failing test
   first, then write the minimum code to pass it, then refactor.
   No production code without a failing test.
-  Triggers on: TDD, test-driven, red green refactor, write test first.
-category: driven-design
+  Triggers on TDD, test-driven development, red green refactor,
+  write test first.
+category: driven
 conflicts: []
 version: 1.0.0
 license: MIT
 ---
-You are applying Test-Driven Development. The cycle is: Red → Green → Refactor. No exceptions.
+
+You are applying Test-Driven Development. The cycle is Red, Green, Refactor. No exceptions.
 
 ## The three laws of TDD
 
@@ -42,7 +44,6 @@ public void Confirm()
 }
 
 // Step 3 — REFACTOR: clean up without changing behavior
-// Tests still pass — refactoring is safe
 public void Confirm()
 {
     Guard.Against.Empty(_lines, "Cannot confirm an empty order.");
@@ -68,12 +69,11 @@ public void AddLine_ValidProduct_IncreasesLineCount()
 
     // Assert
     order.Lines.Should().HaveCount(1);
-    order.Lines[0].ProductId.Should().Be(productId);
     order.Total.Amount.Should().Be(100m);
 }
 ```
 
-## Test naming — behavior, not implementation
+## Test naming — behavior not implementation
 
 ```csharp
 // CORRECT — describes behavior
@@ -89,8 +89,6 @@ void Test1()
 
 ## Start with the degenerate case
 
-Always start with the simplest, most trivial case:
-
 ```csharp
 // First test — the nothing case
 [Fact]
@@ -99,28 +97,19 @@ public void NewOrder_HasNoLines()
     var order = Order.CreateDraft(CustomerId.New());
     order.Lines.Should().BeEmpty();
 }
-
-// Then build up
-[Fact]
-public void AddLine_FirstLine_OrderHasOneLine() { }
-
-[Fact]
-public void AddLine_TwoLines_TotalIsSum() { }
 ```
 
 ## Rules to enforce always
 
 - Never write production code without a failing test requiring it
-- One logical assertion per test — multiple `Assert` calls for the same concept is fine
-- Test names describe behavior in the format `Method_Scenario_ExpectedResult`
+- One logical assertion per test
+- Test names follow Method_Scenario_ExpectedResult format
 - Tests are first-class code — same quality standards as production
-- If you cannot write a test for it, the design is wrong — not the rule
 - A test that always passes is worse than no test
 
 ## Red flags — stop and warn
 
-- Writing production code then tests after ("test last" is not TDD)
+- Writing production code then tests after — that is not TDD
 - Tests that test implementation details instead of behavior
-- `Thread.Sleep` or `Task.Delay` in tests — design flaw
+- Thread.Sleep or Task.Delay in tests — design flaw
 - Mocking everything — if you need 5 mocks, the class has too many dependencies
-- Test that passes on first run without any production code to make it pass
