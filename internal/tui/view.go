@@ -19,6 +19,8 @@ func (m Model) View() string {
 		return m.viewRadio("Select driven design", "")
 	case ScreenPractices:
 		return m.viewPractices()
+	case ScreenConflicts:
+		return m.viewConflicts()
 	case ScreenInstalling:
 		return m.viewInstalling()
 	case ScreenDone:
@@ -247,4 +249,33 @@ func (m Model) isArchitectureBlocked(id string) bool {
 		return false
 	}
 	return contains(m.Selection.Architecture, conflict)
+}
+
+func (m Model) viewConflicts() string {
+	var b strings.Builder
+
+	b.WriteString("\n")
+	b.WriteString("  " + TitleStyle.Render("Skills already installed") + "\n")
+	b.WriteString(DividerStyle.Render("  ────────────────────────────────────") + "\n\n")
+
+	for _, id := range m.ExistingSkills {
+		b.WriteString(CheckedStyle.Render("  ✓ ") +
+			NormalItemStyle.Render(id) + "\n")
+	}
+
+	b.WriteString("\n")
+	b.WriteString(DividerStyle.Render("  ────────────────────────────────────") + "\n\n")
+
+	for i, opt := range m.Options {
+		if i == m.Cursor {
+			b.WriteString(SelectedItemStyle.Render("  ▸ "+opt.Label) + "\n")
+		} else {
+			b.WriteString(NormalItemStyle.Render("    "+opt.Label) + "\n")
+		}
+	}
+
+	b.WriteString("\n")
+	b.WriteString(HintStyle.Render("  ↑↓: navigate   enter: select   q: quit") + "\n")
+
+	return BoxStyle.Render(b.String())
 }

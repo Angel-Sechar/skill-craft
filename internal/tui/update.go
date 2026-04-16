@@ -35,6 +35,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.updateRadio(msg, m.onDrivenDesignConfirm)
 		case ScreenPractices:
 			return m.updatePractices(msg)
+		case ScreenConflicts:
+			return m.updateConflicts(msg)
 		case ScreenInstalling:
 			return m, nil
 		case ScreenDone:
@@ -99,7 +101,7 @@ func (m Model) onStackConfirm(m2 Model) (Model, tea.Cmd) {
 	if m2.Selection.Framework == FrameworkSQL {
 		m2.Screen = ScreenInstalling
 		m2.Results = make(map[string]bool)
-		return m2, doInstall(m2.Selection)
+		return m2, doInstall(m2.Selection, false)
 	}
 
 	m2.Screen = ScreenArchitecture
@@ -187,10 +189,18 @@ func (m Model) updatePractices(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.Selection.Practices = append(m.Selection.Practices, id)
 		}
 
-	case "enter":
-		m.Screen = ScreenInstalling
-		m.Results = make(map[string]bool)
-		return m, doInstall(m.Selection)
+	case "enter": // in updatePractices
+		existing := checkExistingSkills(m.Selection)
+		if len(existing) > 0 {
+			m.ExistingSkills = existing
+			m.Screen = ScreenConflicts
+			m.Options = ConflictOptions
+			m.Cursor = 0
+		} else {
+			m.Screen = ScreenInstalling
+			m.Results = make(map[string]bool)
+			return m, doInstall(m.Selection, false)
+		}
 	}
 	return m, nil
 }
@@ -205,15 +215,48 @@ func (m Model) updateDone(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+// ── Conflicts (radio) ─────────────────────────────────────────────────────────
+func (m Model) updateConflicts(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "q", "ctrl+c":
+		return m, tea.Quit
+	case "up", "k":
+		if m.Cursor > 0 {
+			m.Cursor--
+		}
+	case "down", "j":
+		if m.Cursor < len(m.Options)-1 {
+			m.Cursor++
+		}
+	case "enter":
+		selected := m.Options[m.Cursor]
+		switch selected.ID {
+		case "overwrite":
+			m.Screen = ScreenInstalling
+			m.Results = make(map[string]bool)
+			return m, doInstall(m.Selection, true)
+		case "skip":
+			m.Screen = ScreenInstalling
+			m.Results = make(map[string]bool)
+			return m, doInstall(m.Selection, false)
+		case "cancel":
+			m.Screen = ScreenPractices
+			m.Options = PracticesOptions
+			m.Cursor = 0
+		}
+	}
+	return m, nil
+}
+
 // ── Install command ───────────────────────────────────────────────────────────
 
 type installDoneMsg struct {
 	Results map[string]bool
 }
 
-func doInstall(sel Selection) tea.Cmd {
+func doInstall(sel Selection, overwrite bool) tea.Cmd {
 	return func() tea.Msg {
-		results := installSkills(sel)
+		results := installSkills(sel, overwrite)
 		return installDoneMsg{Results: results}
 	}
 }

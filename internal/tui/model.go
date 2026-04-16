@@ -10,7 +10,8 @@ const (
 	ScreenArchitecture        // screen 3 — pick architecture (checkboxes)
 	ScreenDrivenDesign        // screen 4 — pick driven design (radio)
 	ScreenPractices           // screen 5 — pick practices (checkboxes)
-	ScreenInstalling          // screen 6 — installing (spinner)
+	ScreenConflicts           // screen 6 - show conflicts (if any)
+	ScreenInstalling          // screen 7— installing (spinner)
 	ScreenDone                // done
 )
 
@@ -41,14 +42,16 @@ type Selection struct {
 
 // Model holds the complete application state
 type Model struct {
-	Screen    Screen
-	Selection Selection
-	Options   []Option
-	Cursor    int
-	Width     int
-	Height    int
-	Results   map[string]bool
-	Err       error
+	Screen         Screen
+	Selection      Selection
+	Options        []Option
+	Cursor         int
+	Width          int
+	Height         int
+	ExistingSkills []string
+	OverwriteMode  bool // true = overwrite, false = skip
+	Results        map[string]bool
+	Err            error
 }
 
 // ── Framework options ─────────────────────────────────────────────────────────
@@ -116,6 +119,13 @@ var PracticesOptions = []Option{
 	{ID: "dependency-injection", Label: "Dependency Injection"},
 	{ID: "clean-code", Label: "Clean Code"},
 	{ID: "oop", Label: "OOP"},
+}
+
+// ── Conflict options ───────────────────────────────────────────────────────────────────
+var ConflictOptions = []Option{
+	{ID: "overwrite", Label: "Overwrite all — install and replace existing"},
+	{ID: "skip", Label: "Skip existing — only install missing ones"},
+	{ID: "cancel", Label: "Cancel — go back"},
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

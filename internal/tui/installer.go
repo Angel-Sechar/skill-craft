@@ -15,7 +15,7 @@ var agentDirs = map[string]string{
 }
 
 // installSkills writes selected skills into all detected agent directories
-func installSkills(sel Selection) map[string]bool {
+func installSkills(sel Selection, overwrite bool) map[string]bool {
 	results := make(map[string]bool)
 
 	home, err := os.UserHomeDir()
@@ -29,13 +29,15 @@ func installSkills(sel Selection) map[string]bool {
 		dir := filepath.Join(home, relPath)
 
 		if !dirExists(dir) {
-			results[key] = false
-			continue
+			if err := os.MkdirAll(dir, 0755); err != nil {
+				results[key] = false
+				continue
+			}
 		}
 
 		success := true
 		for _, id := range skillIDs {
-			if err := writeSkill(dir, id); err != nil {
+			if err := writeSkill(dir, id, overwrite); err != nil {
 				success = false
 			}
 		}
@@ -69,7 +71,7 @@ func resolveSkillIDs(sel Selection) []string {
 }
 
 // writeSkill writes a single SKILL.md file into the agent's skills directory
-func writeSkill(agentDir string, skillID string) error {
+func writeSkill(agentDir string, skillID string, overwrite bool) error {
 	content := readEmbeddedSkill(skillID)
 	if content == "" {
 		return nil
@@ -81,8 +83,8 @@ func writeSkill(agentDir string, skillID string) error {
 	}
 
 	dest := filepath.Join(skillDir, "SKILL.md")
-	if fileExists(dest) {
-		return nil // never overwrite existing skills
+	if !overwrite && fileExists(dest) {
+		return nil
 	}
 
 	return os.WriteFile(dest, []byte(content), 0644)
@@ -112,4 +114,20 @@ func dirExists(path string) bool {
 func fileExists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
+}
+
+func checkExistingSkills(sel Selection) []string {
+	home, _ := os.UserHomeDir()
+	existing := []string{}
+	ids := resolveSkillIDs(sel)
+
+	// check only in claude dir as reference
+	claudeDir := filepath.Join(home, ".claude", "skills")
+	for _, id := range ids {
+		dest := filepath.Join(claudeDir, id, "SKILL.md")
+		if fileExists(dest) {
+			existing = append(existing, id)
+		}
+	}
+	return existing
 }
