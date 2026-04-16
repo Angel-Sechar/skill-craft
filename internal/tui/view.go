@@ -16,7 +16,7 @@ func (m Model) View() string {
 	case ScreenArchitecture:
 		return m.viewArchitecture()
 	case ScreenDrivenDesign:
-		return m.viewRadio("Select driven design", "")
+		return m.viewRadio("Select your driven approach", "")
 	case ScreenPractices:
 		return m.viewPractices()
 	case ScreenConflicts:
@@ -123,7 +123,7 @@ func (m Model) viewPractices() string {
 	var b strings.Builder
 
 	b.WriteString("\n")
-	b.WriteString("  " + TitleStyle.Render("Select good practices") + "\n")
+	b.WriteString("  " + TitleStyle.Render("Select code quality") + "\n")
 	b.WriteString(DividerStyle.Render("  ────────────────────────────────────") + "\n\n")
 
 	for i, opt := range m.Options {
@@ -202,8 +202,7 @@ func (m Model) viewDone() string {
 	for _, line := range strings.Split(SwordArt, "\n") {
 		b.WriteString(SwordStyle.Render(line) + "\n")
 	}
-	b.WriteString("\n")
-	b.WriteString("  " + TitleStyle.Render("Done.") + "\n")
+
 	b.WriteString(DividerStyle.Render("  ────────────────────────────────────") + "\n\n")
 
 	// Summary
@@ -216,14 +215,13 @@ func (m Model) viewDone() string {
 		b.WriteString(NormalItemStyle.Render("  architecture  "+arch) + "\n")
 	}
 	if m.Selection.DrivenDesign != "" {
-		b.WriteString(NormalItemStyle.Render("  design        "+m.Selection.DrivenDesign) + "\n")
+		b.WriteString(NormalItemStyle.Render("  driven        "+m.Selection.DrivenDesign) + "\n")
 	}
 	for _, p := range m.Selection.Practices {
 		b.WriteString(NormalItemStyle.Render("  practice      "+p) + "\n")
 	}
 
 	// Agent results
-	b.WriteString("\n")
 	b.WriteString(DividerStyle.Render("  ────────────────────────────────────") + "\n\n")
 
 	installed := 0
@@ -235,7 +233,6 @@ func (m Model) viewDone() string {
 
 	b.WriteString(SuccessStyle.Render(fmt.Sprintf(
 		"  Installed into %d agent(s).", installed)) + "\n\n")
-	b.WriteString(TaglineStyle.Render("  Your agent is forged.") + "\n\n")
 	b.WriteString(HintStyle.Render("  press q to exit") + "\n")
 
 	return BoxStyle.Render(b.String())

@@ -19,8 +19,14 @@ builds:
     goarch:
       - amd64
       - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
     ldflags:
       - -s -w -X main.version={{.Version}}
+
+universal_binaries:
+  - replace: true
 
 archives:
   - formats: tar.gz
@@ -28,6 +34,24 @@ archives:
     format_overrides:
       - goos: windows
         formats: zip
+
+brews:
+  - name: skill-craft
+    repository:
+      owner: Angel-Sechar
+      name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/Angel-Sechar/skill-craft"
+    description: "Senior-level development skills for AI coding agents."
+    license: MIT
+    skip_upload: "auto"
+    install: |
+      bin.install "skill-craft"
+    test: |
+      system "#{bin}/skill-craft", "--version"
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
 
 checksum:
   name_template: "checksums.txt"
