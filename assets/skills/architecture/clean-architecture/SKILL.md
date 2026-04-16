@@ -7,7 +7,7 @@ description: >
   Triggers on clean architecture, use cases, entities, interface adapters,
   dependency rule.
 category: architecture
-conflicts: [hexagonal]
+conflicts: [hexagonal-architecture]
 version: 1.0.0
 license: MIT
 ---

@@ -97,8 +97,8 @@ func ArchitectureOptions(fw Framework) []Option {
 
 // ArchitectureConflicts — selecting one blocks the other
 var ArchitectureConflicts = map[string]string{
-	"hexagonal":          "clean-architecture",
-	"clean-architecture": "hexagonal",
+	"hexagonal-architecture": "clean-architecture",
+	"clean-architecture":     "hexagonal-architecture",
 }
 
 // ── Driven  options ─────────────────────────────────────────────────────
