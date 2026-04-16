@@ -116,17 +116,23 @@ func fileExists(path string) bool {
 	return err == nil
 }
 
+// checkExistingSkills returns a list of skill IDs that already exist in any agent directory
 func checkExistingSkills(sel Selection) []string {
 	home, _ := os.UserHomeDir()
 	existing := []string{}
 	ids := resolveSkillIDs(sel)
 
-	// check only in claude dir as reference
-	claudeDir := filepath.Join(home, ".claude", "skills")
-	for _, id := range ids {
-		dest := filepath.Join(claudeDir, id, "SKILL.md")
-		if fileExists(dest) {
-			existing = append(existing, id)
+	// check all three agents, not just claude
+	for _, relPath := range agentDirs {
+		dir := filepath.Join(home, relPath)
+		if !dirExists(dir) {
+			continue
+		}
+		for _, id := range ids {
+			dest := filepath.Join(dir, id, "SKILL.md")
+			if fileExists(dest) && !contains(existing, id) {
+				existing = append(existing, id)
+			}
 		}
 	}
 	return existing

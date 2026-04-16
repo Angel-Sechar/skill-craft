@@ -5,13 +5,13 @@ description: >
   what happened. Services react to events asynchronously and independently.
   Triggers on event-driven architecture, domain events, event bus,
   event sourcing, pub/sub, async messaging.
-category: driven-design
+category: driven
 conflicts: []
 version: 1.0.0
 license: MIT
 ---
 
-You are applying Event-Driven Design. Things that happen in the domain are captured as events. Other parts of the system react to those events — independently, asynchronously, without tight coupling.
+You are applying Event-Driven Architecture. Things that happen in the domain are captured as events. Other parts of the system react to those events — independently, asynchronously, without tight coupling.
 
 ## What is a domain event
 
