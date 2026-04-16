@@ -64,7 +64,7 @@ The interactive TUI guides you through 5 steps:
 1. Framework      .NET / Spring Boot / Angular / SQL
 2. Stack          specific version for your framework
 3. Architecture   Clean / Hexagonal / Onion / Microservices
-4. Driven Design  TDD / Event-Driven / DDD
+4. Driven         TDD / Event-Driven Architecture / DDD
 5. Practices      SOLID / Dependency Injection / Clean Code / OOP
 ```
 
@@ -109,13 +109,13 @@ Skills are installed into every agent detected on your machine:
 
 > Hexagonal and Clean Architecture are incompatible — the TUI enforces this automatically.
 
-### Driven Design
+### Driven
 
-| Skill                      |
-| -------------------------- |
-| Test-Driven Design (TDD)   |
-| Event-Driven Design (EDD)  |
-| Domain-Driven Design (DDD) |
+| Skill                           |
+| ------------------------------- |
+| Test-Driven Development (TDD)   |
+| Event-Driven Architecture (EDA) |
+| Domain-Driven Design (DDD)      |
 
 ### Practices
 
