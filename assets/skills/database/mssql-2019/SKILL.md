@@ -1,8 +1,9 @@
 ---
 name: mssql-2019
-description: Write and review T-SQL for MS SQL Server 2019. Enforce parameterized queries, proper indexing, execution plan awareness, and performance best practices. Triggers on: "MS SQL Server", "SQL Server 2019", "T-SQL", "MSSQL", "stored procedures".
+description: >
+    Write and review T-SQL for MS SQL Server 2019. Enforce parameterized queries, proper indexing, execution plan awareness, and performance best practices. Triggers on MS SQL Server, SQL Server 2019, T-SQL, MSSQL, stored procedures.
 category: database
-language: sql
+language: T-SQL
 conflicts: []
 version: 1.0.0
 ---
